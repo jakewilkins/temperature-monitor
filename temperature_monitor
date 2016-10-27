@@ -1,0 +1,60 @@
+#! /bin/bash
+# /etc/init.d/blah
+#
+
+# Some things that run always
+#touch /var/lock/blah
+
+CLDIR=/home/pi/temperature_monitor
+
+function start() {
+  source /etc/temperature_monitor.conf
+
+  BUNDLE=/home/pi/.rubies/ruby-2.3.1/bin/bundle
+
+  nohup $BUNDLE exec rake monitor 2> $CLDIR/stderr.nohup 1> $CLDIR/stdout.nohup &
+  #$BUNDLE exec rake poll
+}
+
+function stop() {
+  if [ -f /var/run/tempmon.pid ]; then
+    kill -s INT `cat /var/run/tempmon.pid`
+    if [[ $? == "0" ]]; then
+      echo "cool"
+    else
+      echo "wtf bro $?"
+    fi
+  else
+    echo "ERROR: no PID file found for temperature monitor."
+  fi
+}
+
+function status() {
+  ps -p `cat /var/run/tempmon.pid` -o command=
+}
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo -n "Starting temperature monitor..."
+    start
+    if [ -f /var/run/tempmon.pid ]; then
+      echo " running as PID $(cat /var/run/tempmon.pid)"
+    else
+      echo " failed to start, please check nohup logs in $CLDIR."
+    fi
+    ;;
+  stop)
+    echo -n "Stopping temperatur monitor... "
+    stop
+    ;;
+  status)
+    status
+    ;;
+  *)
+    echo "Usage: /etc/init.d/$0 {start|stop|status}"
+    exit 1
+    ;;
+esac
+
+exit 0

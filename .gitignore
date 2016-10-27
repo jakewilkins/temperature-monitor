@@ -1,0 +1,8 @@
+ruby/
+photon/
+*.nohup
+.secrets
+*.tar.gz
+*.json
+.bundle
+*.log
