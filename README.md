@@ -20,6 +20,11 @@ to sniff the API that the Wifi Plug was using, as well as build the thermometer
 bit (I'm new to hardware). If I was better at Wiring all this would be running on
 the device, but I'm bad at it, so it's here instead.
 
+Also, most of the `Poller` and `Procline` and really anything not directly tied to temperature
+monitoring and changing was just copied from [searcher](https://github.com/jakewilkins/searcher),
+so some of it (like toggling the `Procline` for start/end `:ticks` doesn't really make sense, and
+that's why.
+
 License
 =======
 
