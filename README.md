@@ -12,6 +12,14 @@ temperature vs. outdoor temperature, so on hot days we get some lead time.
 I have a AWS IOT button that will toggle manually and learn a new point, or
 respond to feedback that it made a good decision.
 
+It's flat because it's not a gem. It's just some code running on a raspberry pi.
+
+One of a new series of projects that I can work on if I could get a proof of concept
+running in a day. In this case, I had to be able to use [Charles](https://www.charlesproxy.com/)
+to sniff the API that the Wifi Plug was using, as well as build the thermometer
+bit (I'm new to hardware). If I was better at Wiring all this would be running on
+the device, but I'm bad at it, so it's here instead.
+
 License
 =======
 
