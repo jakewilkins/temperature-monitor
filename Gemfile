@@ -5,4 +5,5 @@ gem 'aws-sdk'
 gem 'event_bus'
 gem 'pry'
 gem 'algorithms'
+gem 'sinatra'
 

@@ -1,0 +1,44 @@
+
+<h1><%= state %> </h1>
+<h4><%=inside%>,<%=outside%></h4>
+
+<form method="POST" action="/toggle">
+  <input type="submit" formaction="/toggle?unusual=true" value="Toggle Without Learning">
+  <input type="submit" value="Toggle">
+  <input type="submit" formaction="/learn" value="Learn from now">
+</form>
+
+<div id="scatterchart_material"></div>
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['scatter']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart () {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Inside');
+        data.addColumn('number', 'Outside');
+        data.addColumn({type: 'string', role: 'tooltip'});
+
+        data.addRows(<%= chart_data%>);
+
+        var options = {
+          legend: 'none',
+          width: 800,
+          height: 500,
+          chart: {
+            title: 'Inside vs Outside Temperatures',
+            subtitle: 'based on historical readings'
+          },
+          hAxis: {title: 'Inside Temperature'},
+          vAxis: {title: 'Outside Temperature'}
+        };
+
+        var chart = new google.charts.Scatter(document.getElementById('scatterchart_material'));
+
+        chart.draw(data, google.charts.Scatter.convertOptions(options));
+      }
+</script>

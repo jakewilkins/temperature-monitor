@@ -81,12 +81,12 @@ class TempManager
 
     attr_reader :value
     def initialize(val)
-      @value = val.round(2)
+      @value = val
     end
 
     def gte(var)
       return false if value == :unavailable
-      value >= var
+      value.round(2) >= var
     end
   end
 end
