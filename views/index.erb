@@ -2,10 +2,10 @@
 <h1><%= state %> </h1>
 <h4><%=inside%>,<%=outside%></h4>
 
-<form method="POST" action="/toggle">
-  <input type="submit" formaction="/toggle?unusual=true" value="Toggle Without Learning">
+<form method="POST" action="/tm/toggle">
+  <input type="submit" formaction="/tm/toggle?unusual=true" value="Toggle Without Learning">
   <input type="submit" value="Toggle">
-  <input type="submit" formaction="/learn" value="Learn from now">
+  <input type="submit" formaction="/tm/learn" value="Learn from now">
 </form>
 
 <div id="scatterchart_material"></div>

@@ -59,7 +59,7 @@ class Web < Sinatra::Base
 
   set :static, true
 
-  get '/' do
+  get '/tm' do
     chart_data = TemperatureNeighborhood.chartable_points
     4.times { chart_data << [cache.inside.value, cache.outside.value, cache.state.value.to_s] }
 
@@ -67,7 +67,7 @@ class Web < Sinatra::Base
       chart_data: chart_data}
   end
 
-  post '/toggle' do
+  post '/tm/toggle' do
     change = if params[:to]
       EventBus.publish(:state_change, to: change)
       params[:to].intern
@@ -80,13 +80,13 @@ class Web < Sinatra::Base
     TempController.set(change)
 
     #erb :index, state: cache.state, inside: cache.insdie, outside: cache.outside
-    redirect '/'
+    redirect '/tm'
   end
 
-  post '/learn' do
+  post '/tm/learn' do
     EventBus.publish(:learn_from_now) unless params[:unusual]
 
-    redirect '/'
+    redirect '/tm'
   end
 
   protected
