@@ -14,6 +14,11 @@ class TemperatureNeighborhood
     EventBus.subscribe(:learn_from_now, instance, :update_model)
   end
 
+  def self.chartable_points
+    instance.reload! if instance.data_points.nil?
+    instance.data_points.map {|h| h['coords'].clone.tap {|a| a << h['value']}}
+  end
+
   def self.nearest_mean_value(coords)
     instance.nearest_mean_value(coords)
   end

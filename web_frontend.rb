@@ -60,7 +60,7 @@ class Web < Sinatra::Base
   set :static, true
 
   get '/' do
-    chart_data = TemperatureNeighborhood.instance.data_points.map {|h| h['coords'].clone.tap {|a| a << h['value']}}
+    chart_data = TemperatureNeighborhood.chartable_points
     4.times { chart_data << [cache.inside.value, cache.outside.value, cache.state.value.to_s] }
 
     erb :index, locals: {state: cache.state.to_s, inside: cache.inside.to_s, outside: cache.outside.to_s,
