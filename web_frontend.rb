@@ -68,11 +68,16 @@ class Web < Sinatra::Base
   end
 
   post '/toggle' do
-    change = (params[:to] || StateManager.toggle).intern
+    change = if params[:to]
+      EventBus.publish(:state_change, to: change)
+      params[:to].intern
+    else
+      StateManager.toggle
+    end
 
     EventBus.publish(:learn_from_now) unless params[:unusual]
 
-    TempManager.set(change)
+    TempController.set(change)
 
     #erb :index, state: cache.state, inside: cache.insdie, outside: cache.outside
     redirect '/'
