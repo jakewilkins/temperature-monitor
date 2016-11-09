@@ -28,7 +28,7 @@ class TempManager
     outside = OutsideTemperature.get
     inside = InsideTemperature.get
 
-    desired_state = TemperatureNeighborhood.nearest_mean_value([inside, outside])
+    desired_state = TemperatureNeighborhood.nearest_mean_value([inside.value, outside.value])
 
     unless current_state == desired_state
       past_states << StateChange.new(desired_state)

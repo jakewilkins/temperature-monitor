@@ -6,13 +6,16 @@ require 'event_bus'
 class Poller
   attr_reader :procline, :logger, :button_monitor
 
-  def self.go
+  def self.init
+    return unless @init
+    @init = true
+
     [Runner, ChangeNotifier, StateManager, TempController,
      TemperatureNeighborhood].each(&:init)
-    #Runner.init # subscribes to EventBus
-    #ChangeNotifier.init
-    #StateManager.init # TODO: read this off of switch
-    #TempController.set(:off) # just so we know
+  end
+
+  def self.go
+    init
     new.go
   end
 

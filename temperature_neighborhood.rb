@@ -34,7 +34,7 @@ class TemperatureNeighborhood
   end
 
   def update(coords, val)
-    data_points << {coord: coords, value: val}
+    data_points << {'coords' => coords, 'value' => val}
     File.write(TEMP_DB, JSON.pretty_generate(data_points))
     build_tree
   end
@@ -48,7 +48,7 @@ class TemperatureNeighborhood
 
   def boolean_mean(results)
     half = results.count / 2
-    trues = results.inject(0) {|out, v| v[:value] == 'on' ? out += 1 : out}
+    trues = results.inject(0) {|out, v| v['value'] == 'on' ? out += 1 : out}
 
     trues > half ? :on : :off
   end

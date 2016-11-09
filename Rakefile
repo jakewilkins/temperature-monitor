@@ -9,10 +9,13 @@ desc 'look the shits'
 task :monitor => :'runner:env' do
   File.write("/var/run/tempmon.pid", Process.pid) rescue nil
 
+  Poller.init
+
   unless ENV['SKIPWEB']
     require_relative 'web_frontend'
     pid = Web.start
   end
+
   Poller.go
   Thread.kill(pid) if pid
 end

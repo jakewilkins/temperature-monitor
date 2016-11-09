@@ -22,23 +22,23 @@ class Web < Sinatra::Base
     end
 
     def initialize(max_age = (5 * 60))
-      @state, @inside, @outside = nil, nil, nil
+      @_state, @_inside, @_outside = nil, nil, nil
       @max_age = max_age
     end
 
     def state
       expire(:state)
-      @state ||= Value.new(StateManager.state)
+      self._state ||= Value.new(StateManager.state)
     end
 
     def inside
       expire(:inside)
-      @inside ||= Value.new(TempManager::InsideTemperature.get.value)
+      self._inside ||= Value.new(TempManager::InsideTemperature.get.value)
     end
 
     def outside
       expire(:outside)
-      @outside ||= Value.new(TempManager::OutsideTemperature.get.value)
+      self._outside ||= Value.new(TempManager::OutsideTemperature.get.value)
     end
 
     private
