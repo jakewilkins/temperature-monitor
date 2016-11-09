@@ -68,7 +68,7 @@ class Web < Sinatra::Base
   end
 
   post '/toggle' do
-    change = params[:to].intern || StateManager.toggle
+    change = (params[:to] || StateManager.toggle).intern
 
     EventBus.publish(:learn_from_now) unless params[:unusual]
 
