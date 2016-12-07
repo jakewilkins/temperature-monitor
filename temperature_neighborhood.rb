@@ -39,7 +39,7 @@ class TemperatureNeighborhood
   end
 
   def update(coords, val)
-    data_points << {'coords' => coords, 'value' => val}
+    data_points << {'coords' => coords, 'value' => val.to_s}
     File.write(TEMP_DB, JSON.pretty_generate(data_points))
     build_tree
   end

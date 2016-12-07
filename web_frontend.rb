@@ -41,6 +41,15 @@ class Web < Sinatra::Base
       self._outside ||= Value.new(TempManager::OutsideTemperature.get.value)
     end
 
+    def desired_state
+      expire(:desired_state)
+      self._desired_state ||= Value.new(TemperatureNeighborhood.nearest_mean_value([inside, outside]))
+    end
+
+    def expire(v, expire_value = nil)
+      instance_variable_set(:"@_#{v}", expire_value)
+    end
+
     private
 
     def expired?(v)
@@ -48,10 +57,14 @@ class Web < Sinatra::Base
       (Time.now - max_age) > v.time
     end
 
-    def expire(v)
+    def expire(v, *dependents)
       var_name = :"@_#{v}"
       val = instance_variable_get(var_name)
-      instance_variable_set(var_name, nil) if expired?(val)
+      if expired?(val)
+        [var_name].concat(dependents.map {|d| :"@_#{d}"}).each do |n|
+          instance_variable_set(n, nil)
+        end
+      end
     end
   end
 
@@ -59,12 +72,16 @@ class Web < Sinatra::Base
 
   set :static, true
 
+  configure do
+    EventBus.subscribe(:state_change, self, :expire_state)
+  end
+
   get '/tm' do
     chart_data = TemperatureNeighborhood.chartable_points
     4.times { chart_data << [cache.inside.value, cache.outside.value, cache.state.value.to_s] }
 
     erb :index, locals: {state: cache.state.to_s, inside: cache.inside.to_s, outside: cache.outside.to_s,
-      chart_data: chart_data}
+      chart_data: chart_data, desired_state: cache.desired_state}
   end
 
   post '/tm/toggle' do
@@ -87,6 +104,10 @@ class Web < Sinatra::Base
     EventBus.publish(:learn_from_now) unless params[:unusual]
 
     redirect '/tm'
+  end
+
+  def expire_state(parms)
+    cache.expire(:state, parms[:to])
   end
 
   protected

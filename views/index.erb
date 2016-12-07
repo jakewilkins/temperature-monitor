@@ -1,6 +1,6 @@
 
-<h1><%= state %> </h1>
-<h4><%=inside%>,<%=outside%></h4>
+<h1><%= state %> </h1><h1><%= desired_state %></h1>
+<h4><%=inside%>, <%=outside%></h4>
 
 <form method="POST" action="/tm/toggle">
   <input type="submit" formaction="/tm/toggle?unusual=true" value="Toggle Without Learning">

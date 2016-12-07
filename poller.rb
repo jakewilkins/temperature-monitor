@@ -7,7 +7,7 @@ class Poller
   attr_reader :procline, :logger, :button_monitor
 
   def self.init
-    return unless @init
+    return if @init
     @init = true
 
     [Runner, ChangeNotifier, StateManager, TempController,
