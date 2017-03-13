@@ -8,8 +8,8 @@ class Web < Sinatra::Base
     end
   end
   class Cache
-    attr_accessor :_state, :_inside, :_outside, :max_age
-    private :_state=, :_inside=, :_outside=
+    attr_accessor :_state, :_inside, :_outside, :max_age, :_desired_state
+    private :_state=, :_inside=, :_outside=, :_desired_state
 
     class Value
       attr_reader :value, :time
