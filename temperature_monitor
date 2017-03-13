@@ -41,6 +41,8 @@ function status() {
     pid=`cat /var/run/tempmon.pid`
     if [[ ! -z "$pid" ]]; then
       ps -p  -o command=
+    else
+      echo 'not running'
     fi
   fi
 }
