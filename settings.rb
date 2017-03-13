@@ -37,4 +37,28 @@ module Settings
   def prowl_api_key
     ENV['PROWL_API_KEY']
   end
+
+  def kasa_user
+    ENV['KASA_USER']
+  end
+
+  def kasa_password
+    ENV['KASA_PASSWORD']
+  end
+
+  def kasa_uuid
+    ENV['KASA_UUID']
+  end
+
+  def session_token=(str)
+    ENV['SESSION_TOKEN'] = str
+    begin
+      str = File.read('/etc/temperature_monitor.conf')
+      str.gusb(/^export SESSION_TOKEN=.*$/, "export SESSION_TOKEN=#{str}")
+      File.write('/etc/temperature_monitor.conf', str)
+    rescue Exception => boom
+      puts "error persisting session token\n#{boom.message}"
+      puts "whatever..."
+    end
+  end
 end

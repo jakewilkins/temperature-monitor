@@ -31,7 +31,7 @@ namespace :runner do
     #Setup.rake
     %w|poller.rb procline.rb runner.rb settings.rb temp_manager.rb
        temp_controller.rb change_notifier.rb button_monitor.rb state_manager.rb
-       temperature_neighborhood.rb|.each do |f|
+       temperature_neighborhood.rb tplink_client.rb|.each do |f|
       require_relative "./#{f}"
     end
   end
