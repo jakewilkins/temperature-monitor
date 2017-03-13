@@ -6,11 +6,10 @@
 #touch /var/lock/blah
 
 CLDIR=/home/pi/temperature_monitor
+BUNDLE=/home/pi/.rubies/ruby-2.3.1/bin/bundle
 
 function start() {
   source /etc/temperature_monitor.conf
-
-  BUNDLE=/home/pi/.rubies/ruby-2.3.1/bin/bundle
 
   nohup $BUNDLE exec rake monitor 2> $CLDIR/stderr.nohup 1> $CLDIR/stdout.nohup &
   #$BUNDLE exec rake poll
@@ -29,8 +28,18 @@ function stop() {
   fi
 }
 
+function console() {
+  source /etc/temperature_monitor.conf
+
+  $BUNDLE exerc rake console
+}
+
 function status() {
-  ps -p `cat /var/run/tempmon.pid` -o command=
+  if [ ! -f /var/run/tempmon.pid ]; then
+    echo 'not running'
+  else
+    ps -p `cat /var/run/tempmon.pid` -o command=
+  fi
 }
 
 # Carry out specific functions when asked to by the system
@@ -50,6 +59,9 @@ case "$1" in
     ;;
   status)
     status
+    ;;
+  console)
+    console
     ;;
   *)
     echo "Usage: /etc/init.d/$0 {start|stop|status}"
