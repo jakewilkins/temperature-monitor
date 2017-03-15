@@ -9,7 +9,7 @@ class Web < Sinatra::Base
   end
   class Cache
     attr_accessor :_state, :_inside, :_outside, :max_age, :_desired_state
-    private :_state=, :_inside=, :_outside=, :_desired_state
+    private :_state=, :_inside=, :_outside=, :_desired_state=
 
     class Value
       attr_reader :value, :time
@@ -43,7 +43,7 @@ class Web < Sinatra::Base
 
     def desired_state
       expire(:desired_state)
-      self._desired_state ||= Value.new(TemperatureNeighborhood.nearest_mean_value([inside, outside]))
+      self._desired_state ||= Value.new(TemperatureNeighborhood.nearest_mean_value([inside.value, outside.value]))
     end
 
     def expire(v, expire_value = nil)
@@ -73,7 +73,7 @@ class Web < Sinatra::Base
   set :static, true
 
   configure do
-    EventBus.subscribe(:state_change, self, :expire_state)
+    EventBus.subscribe(:state_changed, self, :expire_state)
   end
 
   get '/tm' do
@@ -81,12 +81,12 @@ class Web < Sinatra::Base
     4.times { chart_data << [cache.inside.value, cache.outside.value, cache.state.value.to_s] }
 
     erb :index, locals: {state: cache.state.to_s, inside: cache.inside.to_s, outside: cache.outside.to_s,
-      chart_data: chart_data, desired_state: cache.desired_state}
+                         chart_data: chart_data, desired_state: cache.desired_state.to_s}
   end
 
   post '/tm/toggle' do
     change = if params[:to]
-      EventBus.publish(:state_change, to: change)
+      EventBus.publish(:state_changed, to: change)
       params[:to].intern
     else
       StateManager.toggle

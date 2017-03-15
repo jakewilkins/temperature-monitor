@@ -16,7 +16,7 @@ class Runner
     return unless (change = TempManager.check)
 
     unless StateManager.state == change
-      EventBus.publish(:state_change, to: change)
+      EventBus.publish(:state_changed, to: change)
       TempController.set(change)
     end
   end
