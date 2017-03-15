@@ -13,6 +13,10 @@ class StateManager
     instance.state
   end
 
+  def self.current
+    instance.state
+  end
+
   def self.init
     instance
   end

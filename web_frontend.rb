@@ -27,22 +27,22 @@ class Web < Sinatra::Base
     end
 
     def state
-      expire(:state)
+      __expire(:state)
       self._state ||= Value.new(StateManager.state)
     end
 
     def inside
-      expire(:inside)
+      __expire(:inside)
       self._inside ||= Value.new(TempManager::InsideTemperature.get.value)
     end
 
     def outside
-      expire(:outside)
+      __expire(:outside)
       self._outside ||= Value.new(TempManager::OutsideTemperature.get.value)
     end
 
     def desired_state
-      expire(:desired_state)
+      __expire(:desired_state)
       self._desired_state ||= Value.new(TemperatureNeighborhood.nearest_mean_value([inside.value, outside.value]))
     end
 
@@ -57,7 +57,7 @@ class Web < Sinatra::Base
       (Time.now - max_age) > v.time
     end
 
-    def expire(v, *dependents)
+    def __expire(v, *dependents)
       var_name = :"@_#{v}"
       val = instance_variable_get(var_name)
       if expired?(val)
@@ -77,11 +77,20 @@ class Web < Sinatra::Base
   end
 
   get '/tm' do
-    chart_data = TemperatureNeighborhood.chartable_points
-    4.times { chart_data << [cache.inside.value, cache.outside.value, cache.state.value.to_s] }
+    if params['expire']
+      cache.expire(:state)
+      cache.expire(:inside_temperature)
+      cache.expire(:outside_temperature)
+      cache.expire(:desired_state)
+    end
 
-    erb :index, locals: {state: cache.state.to_s, inside: cache.inside.to_s, outside: cache.outside.to_s,
-                         chart_data: chart_data, desired_state: cache.desired_state.to_s}
+    chart_data = TemperatureNeighborhood.chartable_points
+    state = StateManager.current.to_s
+    4.times { chart_data << [cache.inside.value, cache.outside.value, state] }
+
+    erb :index, locals: {state: state, inside: cache.inside.to_s,
+      outside: cache.outside.to_s, chart_data: chart_data,
+      desired_state: cache.desired_state.to_s}
   end
 
   post '/tm/toggle' do
