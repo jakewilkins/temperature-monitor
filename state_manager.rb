@@ -35,6 +35,7 @@ class StateManager
 
   def initialize
     @state = :off
+    @locked_until = Time.now - 1
 
     EventBus.subscribe(:state_changed, self, :changed)
   end
