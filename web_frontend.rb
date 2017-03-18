@@ -115,7 +115,7 @@ class Web < Sinatra::Base
     redirect '/tm'
   end
 
-  post '/tm/locked' do
+  post '/tm/lock' do
     if StateManager.locked?
       StateManager.unlock!
     else
