@@ -122,7 +122,7 @@ class Web < Sinatra::Base
       StateManager.lock!
     end
 
-    retirect '/tm'
+    redirect '/tm'
   end
 
   def expire_state(parms)
