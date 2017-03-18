@@ -3,13 +3,22 @@ class Procline
 
   def initialize
     @last_status, @time_waiting = "", ""
+    @set_locked = false
   end
 
   def tick(count)
     set(@last_status, "Waiting #{time_left(count)}.")
   end
 
+  def locked
+    unless @set_locked
+      set("locked by user until midnight.")
+      @set_locked = true
+    end
+  end
+
   def begin_run
+    @set_locked = false if @set_locked
     set("beginnning temp check...")
   end
 

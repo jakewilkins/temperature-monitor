@@ -2,10 +2,15 @@
 <h1><%= state %> </h1><h1><%= desired_state %></h1>
 <h4><%=inside%>, <%=outside%></h4>
 
+<% if locked %>
+<h4>Automatic changes disabled</h4>
+<% end %>
+
 <form method="POST" action="/tm/toggle">
   <input type="submit" formaction="/tm/toggle?unusual=true" value="Toggle Without Learning">
   <input type="submit" value="Toggle">
   <input type="submit" formaction="/tm/learn" value="Learn from now">
+  <input type="submit" formaction="/tm/lock" value="<%= locked ? "Unlock" : "Lock until midnight"%>">
 </form>
 
 <div id="scatterchart_material"></div>

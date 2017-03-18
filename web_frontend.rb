@@ -90,7 +90,7 @@ class Web < Sinatra::Base
 
     erb :index, locals: {state: state, inside: cache.inside.to_s,
       outside: cache.outside.to_s, chart_data: chart_data,
-      desired_state: cache.desired_state.to_s}
+      desired_state: cache.desired_state.to_s, locked: StateManager.locked?}
   end
 
   post '/tm/toggle' do
@@ -113,6 +113,16 @@ class Web < Sinatra::Base
     EventBus.publish(:learn_from_now) unless params[:unusual]
 
     redirect '/tm'
+  end
+
+  post '/tm/locked' do
+    if StateManager.locked?
+      StateManager.unlock
+    else
+      StateManager.lock!
+    end
+
+    retirect '/tm'
   end
 
   def expire_state(parms)

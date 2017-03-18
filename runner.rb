@@ -13,6 +13,7 @@ class Runner
   end
 
   def tick(args)
+    return if StateManager.locked?
     return unless (change = TempManager.check)
 
     unless StateManager.state == change

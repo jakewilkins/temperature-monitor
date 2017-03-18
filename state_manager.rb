@@ -31,6 +31,23 @@ class StateManager
     @state = state == :on ? :off : :on
   end
 
+  def locked?
+    @locked_until > Time.now
+  end
+
+  def lock!
+    @locked_until = begin
+      t = Time.now
+      t += ((24 - t.hour) * 60 * 60)
+      t -= t.min * 60
+      t -= t.sec
+    end
+  end
+
+  def unlock!
+    @locked_until = Time.now - 1
+  end
+
   def changed(args)
     @state = args[:to]
   end

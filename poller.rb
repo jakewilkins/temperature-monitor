@@ -39,7 +39,11 @@ class Poller
       break if @quit
       if tick > five_minutes
         tick = 0
-        run
+        if StateManager.locked?
+          procline.locked
+        else
+          run
+        end
       else
         button_monitor.join if button_monitor.dead?
         tick += 1
