@@ -17,6 +17,18 @@ class StateManager
     instance.state
   end
 
+  def self.locked?
+    instance.locked?
+  end
+
+  def self.lock!
+    instance.lock!
+  end
+
+  def self.unlock!
+    instance.unlock!
+  end
+
   def self.init
     instance
   end

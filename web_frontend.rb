@@ -117,7 +117,7 @@ class Web < Sinatra::Base
 
   post '/tm/locked' do
     if StateManager.locked?
-      StateManager.unlock
+      StateManager.unlock!
     else
       StateManager.lock!
     end
