@@ -6,7 +6,7 @@ module ChangeNotifier
   class << self
     def init
       EventBus.subscribe(:state_changed, self, :call)
-      if redis_url
+      if Settings.redis_url
         @redis = Redis.new(url: Settings.redis_url)
       end
     end
