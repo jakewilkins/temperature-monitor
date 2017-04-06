@@ -1,5 +1,6 @@
 require 'net/http'
 require 'uri'
+require 'redis'
 
 module ChangeNotifier
   URI = URI('https://api.prowlapp.com/publicapi/add')
