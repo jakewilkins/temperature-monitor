@@ -50,6 +50,14 @@ module Settings
     ENV['KASA_UUID']
   end
 
+  def redis_url
+    ENV['REDIS_URL']
+  end
+
+  def owner_is_home_key
+    ENV['OWNER_IS_HOME_KEY']
+  end
+
   def session_token=(str)
     ENV['SESSION_TOKEN'] = str
     begin

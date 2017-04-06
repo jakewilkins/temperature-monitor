@@ -6,13 +6,18 @@ module ChangeNotifier
   class << self
     def init
       EventBus.subscribe(:state_changed, self, :call)
+      if redis_url
+        @redis = Redis.new(url: Settings.redis_url)
+      end
     end
 
     def call(state)
       #application, event, description
 
-      event, description = message_for(state[:to])
-      post(event, description)
+      notifications_enabled do
+        event, description = message_for(state[:to])
+        post(event, description)
+      end
     end
 
     def post(event, description)
@@ -35,6 +40,12 @@ module ChangeNotifier
         puts response.body rescue ''
         false
       end
+    end
+
+    def notifications_enabled
+      return yield unless Settings.owner_is_home_key
+
+      yield if @redis.get(Settings.owner_is_home_key)
     end
 
     def message_for(state)
