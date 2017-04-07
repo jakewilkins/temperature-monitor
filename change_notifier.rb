@@ -7,6 +7,7 @@ module ChangeNotifier
   class << self
     def init
       EventBus.subscribe(:state_changed, self, :call)
+      p Settings.redis_url
       if Settings.redis_url
         @redis = Redis.new(url: Settings.redis_url)
       end
@@ -46,7 +47,7 @@ module ChangeNotifier
     def notifications_enabled
       return yield unless Settings.owner_is_home_key
 
-      yield if @redis.get(Settings.owner_is_home_key)
+      yield unless @redis.get(Settings.owner_is_home_key)
     end
 
     def message_for(state)
