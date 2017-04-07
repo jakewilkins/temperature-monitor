@@ -62,7 +62,7 @@ module Settings
     ENV['SESSION_TOKEN'] = str
     begin
       str = File.read('/etc/temperature_monitor.conf')
-      str.gusb(/^export SESSION_TOKEN=.*$/, "export SESSION_TOKEN=#{str}")
+      str.gsub(/^export SESSION_TOKEN=.*$/, "export SESSION_TOKEN=#{str}")
       File.write('/etc/temperature_monitor.conf', str)
     rescue Exception => boom
       puts "error persisting session token\n#{boom.message}"
